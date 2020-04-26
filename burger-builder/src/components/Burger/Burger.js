@@ -18,8 +18,10 @@ const burger = (props) => {
         transformedIngredients = <p>Please start adding ingredients!</p>
     }
 
+    const burgerClasses = props.inList ? classes.FullWidthBurger : classes.Burger;
+
     return (
-        <div className={classes.Burger}>
+        <div className={burgerClasses}>
             <BurgerIngredient type="bread-top"/>
             {transformedIngredients}
             <BurgerIngredient type="bread-bottom"/>

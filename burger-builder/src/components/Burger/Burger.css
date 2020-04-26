@@ -1,7 +1,17 @@
 .Burger {
-    width: 100px;
+    width: 100%;
     margin: auto;
     height: 250px;
+    overflow: auto;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.FullWidthBurger {
+    width: 100%;
+    height: inherit;
+    margin: auto;
     overflow: auto;
     text-align: center;
     font-weight: bold;
