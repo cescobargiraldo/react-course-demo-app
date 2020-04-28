@@ -5,10 +5,20 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 import {Provider} from 'react-redux';
-import {createStore} from 'redux';
-import reducer from './store/Reducers/burger';
+import {createStore, applyMiddleware, compose} from 'redux';
 
-const store = createStore(reducer);
+import thunk from 'redux-thunk';
+
+import burgerReducer from './store/reducers/burger';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(
+    burgerReducer,
+    composeEnhancers(
+        applyMiddleware(thunk)
+    )
+);
 
 const app = (
     <Provider store={store}>

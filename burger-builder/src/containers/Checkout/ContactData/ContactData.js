@@ -5,10 +5,14 @@ import classes from './ContactData.css';
 import axios from '../../../axios-orders';
 
 import {withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+
+import * as actions from '../../../store/actions/index';
 
 class ContactData extends Component {
     state={
@@ -108,10 +112,6 @@ class ContactData extends Component {
     orderHandler = (event) => {
         event.preventDefault();
 
-        this.setState({
-            loading: true
-        });
-
         var contactData = {};
 
         for(let key in this.state.orderForm){
@@ -119,23 +119,12 @@ class ContactData extends Component {
         }
 
         const order = {
-            ingredients: this.props.ingredients,
-            price: this.props.totalPrice,
+            ingredients: this.props.ings,
+            price: this.props.total,
             orderData: contactData
         }
 
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({
-                    loading: false
-                });
-                this.props.history.push('/my-orders');
-            })
-            .catch(error => {
-                this.setState({
-                    loading: false
-                });
-            });
+        this.props.purchaseBurger(orderData);
     }
 
     checkInputValidity = (value, rules) => {
@@ -228,4 +217,17 @@ class ContactData extends Component {
     }
 }
 
-export default withRouter(ContactData);
+const mapSateToProps = (state) => {
+    return {
+        ings: state.ingredients,
+        total: state.total
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        purchaseBurger: (orderData) => dispatch(actions.purchaseBurgerStart(orderData))
+    }
+};
+
+export default connect(mapSateToProps, mapDispatchToProps)(withErrorHandler(withRouter(ContactData)), axios);
