@@ -27,7 +27,7 @@ export const setIngredientsFailed = () => {
     return {
         type: actionTypes.SET_INGREDIENTS_FAILED
     }
-}
+};
 
 export const initIngredients = () => {
     return dispatch => {

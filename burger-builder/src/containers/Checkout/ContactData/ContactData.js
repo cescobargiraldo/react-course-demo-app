@@ -105,8 +105,7 @@ class ContactData extends Component {
                 valid: true
             }
         },
-        validForm: false,
-        loading: false
+        validForm: false
     }
 
     orderHandler = (event) => {
@@ -124,7 +123,7 @@ class ContactData extends Component {
             orderData: contactData
         }
 
-        this.props.purchaseBurger(orderData);
+        this.props.purchaseBurger(order, this.props.token);
     }
 
     checkInputValidity = (value, rules) => {
@@ -204,7 +203,7 @@ class ContactData extends Component {
             </form>
         );
 
-        if(this.state.loading){
+        if(this.props.loading){
             form = <Spinner />
         }
 
@@ -219,15 +218,17 @@ class ContactData extends Component {
 
 const mapSateToProps = (state) => {
     return {
-        ings: state.ingredients,
-        total: state.total
+        ings: state.burger.ingredients,
+        total: state.burger.totalPrice, 
+        loading: state.order.loading,
+        token: state.auth.token
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        purchaseBurger: (orderData) => dispatch(actions.purchaseBurgerStart(orderData))
+        purchaseBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
     }
 };
 
-export default connect(mapSateToProps, mapDispatchToProps)(withErrorHandler(withRouter(ContactData)), axios);
+export default connect(mapSateToProps, mapDispatchToProps)(withErrorHandler(withRouter(ContactData), axios));
