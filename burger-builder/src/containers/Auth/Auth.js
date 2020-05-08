@@ -8,6 +8,8 @@ import Input from '../../components/UI/Input/Input'
 import Button from '../../components/UI/Button/Button'
 import Spinner from '../../components/UI/Spinner/Spinner'
 
+import { updateObject, checkInputValidity } from '../../shared/utility'
+
 import * as actions from '../../store/actions/index'
 
 export class Auth extends Component {
@@ -46,41 +48,23 @@ export class Auth extends Component {
         isSignUp: false,
     }
 
-    checkInputValidity = (value, rules) => {
-        let valid = true
-
-        if (!rules) {
-            return valid
+    componentDidMount() {
+        if (!this.props.building && this.props.authRedirect !== '/') {
+            this.props.onSetAuthRedirect('/')
         }
-
-        if (rules.required) {
-            valid = value !== '' && valid
-        }
-
-        if (rules.minLength) {
-            valid = value.length >= rules.minLength && valid
-        }
-
-        if (rules.maxLength) {
-            valid = value.length <= rules.maxLength && valid
-        }
-
-        return valid
     }
 
     inputChangedHandler = (event, controlName) => {
-        const updatedControls = {
-            ...this.state.controls,
-            [controlName]: {
-                ...this.state.controls[controlName],
+        const updatedControls = updateObject(this.state.controls, {
+            [controlName]: updateObject(this.state.controls[controlName], {
                 value: event.target.value,
-                valid: this.checkInputValidity(
+                valid: checkInputValidity(
                     event.target.value,
                     this.state.controls[controlName].validation
                 ),
                 touched: true,
-            },
-        }
+            }),
+        })
 
         this.setState({
             controls: updatedControls,
@@ -172,6 +156,7 @@ const mapStateToProps = (state) => {
         error: state.auth.error,
         isAuthenticated: state.auth.token !== null,
         authRedirect: state.auth.authRedirect,
+        building: state.burger.building,
     }
 }
 
@@ -179,6 +164,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onAuth: (email, password, isSignUp) =>
             dispatch(actions.auth(email, password, isSignUp)),
+        onSetAuthRedirect: (path) => dispatch(actions.setAuthRedirect(path)),
     }
 }
 
