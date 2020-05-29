@@ -1,7 +1,6 @@
 import * as actionTypes from './actionTypes'
 
 import axios from '../../axios-orders'
-import order from '../../components/Order/Order'
 
 export const purchaseBurgerSuccess = (id, orderData) => {
     return {
@@ -25,10 +24,17 @@ export const purchaseBurgerStart = () => {
 }
 
 export const purchaseBurger = (orderData, token) => {
-    return {
-        type: actionTypes.PURCHASE_BURGER,
-        orderData: orderData,
-        token: token,
+    return (dispatch) => {
+        dispatch(purchaseBurgerStart())
+        const url = '/orders.json?auth=' + token
+        axios
+            .post(url, orderData)
+            .then((response) => {
+                dispatch(purchaseBurgerSuccess(response.data.name, orderData))
+            })
+            .catch((error) => {
+                dispatch(purchaseBurgerFail(error))
+            })
     }
 }
 
@@ -58,9 +64,23 @@ export const loadOrdersStart = () => {
 }
 
 export const loadOrders = (token, userId) => {
-    return {
-        type: actionTypes.LOAD_ORDERS,
-        token: token,
-        userId: userId,
+    return (dispatch) => {
+        dispatch(loadOrdersStart())
+        const queryParams =
+            '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"'
+        axios
+            .get('/orders.json' + queryParams)
+            .then((response) => {
+                var dataOrders = Object.keys(response.data).map((oKey) => {
+                    return {
+                        key: oKey,
+                        ...response.data[oKey],
+                    }
+                })
+                dispatch(loadOrdersSuccess(dataOrders))
+            })
+            .catch((error) => {
+                dispatch(loadOrdersFail())
+            })
     }
 }
