@@ -3,11 +3,8 @@ import axios from 'axios'
 import * as actions from '../actions'
 
 export function* logoutSaga(action){
-    // yield localStorage.removeItem('token')
     yield call([localStorage, 'removeItem'], 'token')
-    // yield localStorage.removeItem('expDate')
     yield call([localStorage, 'removeItem'], 'expDate')
-    // yield localStorage.removeItem('userId')
     yield call([localStorage, 'removeItem'], 'userId')
     yield put(actions.logoutSucceed())
 }
@@ -44,6 +41,7 @@ export function* authUserSaga(action) {
         )
         yield localStorage.setItem('expDate', expirationDate)
         yield localStorage.setItem('userId', response.data.localId)
+
         yield put(actions.authSuccess(response.data.localId, response.data.idToken))
         yield put(actions.checkAuthTimeout(response.data.expiresIn))
     }catch(err){

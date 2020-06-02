@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 
 import classes from './Orders.css'
 
@@ -11,34 +11,35 @@ import Order from '../../components/Order/Order'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler'
 
-class Orders extends Component {
-    componentDidMount() {
-        this.props.loadOrders(this.props.token, this.props.userId)
-    }
+const Orders = (props) => {
 
-    render() {
-        let ordersToShow = this.props.loading ? (
-            <Spinner />
-        ) : (
-            <h3>No orders yet!</h3>
-        )
+    const { loadOrders, token, userId } = props
 
-        if (this.props.orders && this.props.orders.length > 0) {
-            ordersToShow = this.props.orders.map((order) => {
-                return (
-                    <li key={order.key}>
-                        <Order order={order} />
-                    </li>
-                )
-            })
-        }
-        return (
-            <div className={classes.Orders}>
-                <h1>Your Orders</h1>
-                <ul>{ordersToShow}</ul>
-            </div>
-        )
+    useEffect(() => {
+        loadOrders(token, userId)
+    }, [loadOrders, token, userId])
+
+    let ordersToShow = props.loading ? (
+        <Spinner />
+    ) : (
+        <h3>No orders yet!</h3>
+    )
+
+    if (props.orders && props.orders.length > 0) {
+        ordersToShow = props.orders.map((order) => {
+            return (
+                <li key={order.key}>
+                    <Order order={order} />
+                </li>
+            )
+        })
     }
+    return (
+        <div className={classes.Orders}>
+            <h1>Your Orders</h1>
+            <ul>{ordersToShow}</ul>
+        </div>
+    )
 }
 
 const mapStateToProps = (state) => {

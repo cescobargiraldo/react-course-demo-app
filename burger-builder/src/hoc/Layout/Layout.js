@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
 import classes from './Layout.css'
@@ -7,39 +7,31 @@ import Aux from '../Auxilliary/Auxilliary'
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar'
 import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer'
 
-class Layout extends Component {
-    state = {
-        showSideDrawer: false,
+const Layout = (props) => {
+    const [sideDrawerIsVisible, setSideDrawerIsVisible] = useState(false)
+
+    const sideDrawerCloseHandler = () => {
+        setSideDrawerIsVisible(false)
     }
 
-    sideDrawerCloseHandler = () => {
-        this.setState({
-            showSideDrawer: false,
-        })
+    const sideDrawerToggleHandler = () => {
+        setSideDrawerIsVisible(!sideDrawerIsVisible)
     }
 
-    sideDrawerToggleHandler = () => {
-        this.setState((prevState) => {
-            return { showSideDrawer: !prevState.showSideDrawer }
-        })
-    }
-
-    render() {
-        return (
-            <Aux>
-                <Toolbar
-                    isAuth={this.props.isAuthenticated}
-                    drawerToggleClick={this.sideDrawerToggleHandler}
-                />
-                <SideDrawer
-                    isAuth={this.props.isAuthenticated}
-                    open={this.state.showSideDrawer}
-                    closed={this.sideDrawerCloseHandler}
-                />
-                <main className={classes.Content}>{this.props.children}</main>
-            </Aux>
-        )
-    }
+    return (
+        <Aux>
+            <Toolbar
+                isAuth={props.isAuthenticated}
+                drawerToggleClick={sideDrawerToggleHandler}
+            />
+            <SideDrawer
+                isAuth={props.isAuthenticated}
+                open={sideDrawerIsVisible}
+                closed={sideDrawerCloseHandler}
+            />
+            <main className={classes.Content}>{props.children}</main>
+        </Aux>
+    )
 }
 
 const mapStateToProps = (state) => {
