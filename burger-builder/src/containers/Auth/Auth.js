@@ -137,7 +137,7 @@ const Auth = (props) => {
                 </Button>
             </form>
             <Button btnType="Danger" click={toggleSignUpHandler}>
-                Swith to {isSignUp ? 'Sign In' : 'Sign Up'}
+                Switch to {isSignUp ? 'Sign In' : 'Sign Up'}
             </Button>
         </div>
     )

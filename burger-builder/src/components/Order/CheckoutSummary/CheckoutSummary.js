@@ -9,7 +9,7 @@ const checkoutSummary = (props) => {
 
     return (
         <div className={classes.CheckoutSummary}>
-            <h1>I hope it tates well!</h1>
+            <h1>I hope it tastes well!</h1>
             <div style={{
                 width: '100%',
                 margin: 'auto'
