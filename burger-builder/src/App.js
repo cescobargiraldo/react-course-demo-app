@@ -8,8 +8,6 @@ import Spinner from './components/UI/Spinner/Spinner'
 
 import * as actions from './store/actions/index'
 
-//This is a test
-
 const Checkout = React.lazy(() => {
     return import('./containers/Checkout/Checkout')
 })
